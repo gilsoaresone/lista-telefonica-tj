@@ -1,0 +1,156 @@
+<main class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">TJ</span><span>Lista<br /><strong>Telefônica</strong></span>
+    </div>
+    <nav>
+      <a [class.active]="activePage() === 'consulta'" (click)="activePage.set('consulta')"
+        ><span>⌕</span> Consultar lista</a
+      ><a [class.active]="activePage() === 'apis'" (click)="activePage.set('apis')"
+        ><span>⌘</span> APIs consultadas</a
+      ><a><span>⚙</span> Configurações</a>
+    </nav>
+    <div class="side-note">
+      <span class="online-dot"></span>
+      <div><strong>Consulta direta</strong><small>portal.tjsp.jus.br</small></div>
+    </div>
+    <div class="version">Angular 20 · XLSX local</div>
+  </aside>
+  <section class="content">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">LISTA TELEFÔNICA · TJSP</p>
+        <h1>Consultar Lista</h1>
+      </div>
+      <div class="user">
+        <span class="avatar">GS</span
+        ><span><strong>Gil Soares</strong><small>Operador</small></span>
+      </div>
+    </header>
+    <div class="workspace" *ngIf="activePage() === 'consulta'; else apiPage">
+      <section class="intro">
+        <div>
+          <h2>Lista Telefônica</h2>
+          <p>Consulte municípios, imóveis ou setores diretamente no portal do TJSP.</p>
+        </div>
+        <span class="secure">● acesso online</span>
+      </section>
+      <section class="search-panel panel">
+        <div class="panel-head">
+          <div>
+            <span class="step">01</span>
+            <div class="panel-title">
+              <h3>Lista consolidada</h3>
+              <p>Consulte todos os registros da planilha única fornecida.</p>
+            </div>
+          </div>
+        </div>
+        <div class="single-source">
+          <span class="source-icon">▤</span>
+          <div>
+            <strong>copilot lista-telefonica-tjsp.csv</strong
+            ><small>Base consolidada com municípios, unidades, setores e contatos</small>
+          </div>
+          <span class="source-ready">Base disponível</span>
+        </div>
+        <button
+          class="search-button full-button"
+          [disabled]="loading()"
+          (click)="loadCompleteList()"
+        >
+          {{ loading() ? 'Carregando lista...' : 'Consultar lista completa' }}
+        </button>
+        <p class="error" *ngIf="error()">{{ error() }}</p>
+      </section>
+      <section class="result-panel panel">
+        <div class="result-head">
+          <div>
+            <span class="step">02</span>
+            <div class="panel-title">
+              <h3>Resultado da consulta</h3>
+              <p>{{ status() }}</p>
+            </div>
+          </div>
+          <div class="result-actions">
+            <input
+              [value]="exportName()"
+              (input)="exportName.set($any($event.target).value)"
+              aria-label="Nome do arquivo Excel"
+            /><button
+              class="export-button"
+              [disabled]="!resultRows().length"
+              (click)="exportExcel()"
+            >
+              ⇩ Exportar Excel
+            </button>
+          </div>
+        </div>
+        <div class="result-content" *ngIf="resultHtml(); else empty">
+          <table *ngIf="completeListLoaded(); else endpointResult">
+            <thead>
+              <tr>
+                <th *ngFor="let cell of resultRows()[0]">{{ cell }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of resultRows().slice(1)">
+                <td *ngFor="let cell of row">{{ cell }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #endpointResult
+            ><div class="html-result" [innerHTML]="resultHtml()"></div
+          ></ng-template>
+        </div>
+        <ng-template #empty
+          ><div class="empty">
+            <span>⌕</span><strong>Nenhum resultado carregado</strong>
+            <p>Clique em “Consultar tudo” ou selecione um item no autocomplete.</p>
+          </div></ng-template
+        >
+      </section>
+      <footer>
+        <span>As consultas respeitam os limites do portal TJSP.</span
+        ><span>O arquivo Excel é gerado localmente no navegador.</span>
+      </footer>
+    </div>
+    <ng-template #apiPage
+      ><div class="workspace api-workspace">
+        <section class="intro">
+          <div>
+            <h2>APIs consultadas</h2>
+            <p>
+              Rotas utilizadas para carregar, consultar e preparar o relatório da lista telefônica.
+            </p>
+          </div>
+          <span class="secure">● fonte documentada</span>
+        </section>
+        <section class="api-summary">
+          <div>
+            <strong>{{ apiRoutes.length }}</strong
+            ><span>rotas catalogadas</span>
+          </div>
+          <div><strong>12</strong><span>colunas no relatório</span></div>
+          <div><strong>7.641</strong><span>registros consolidados</span></div>
+        </section>
+        <section class="api-list">
+          <div class="api-row api-header">
+            <span>Método</span><span>Rota consultada</span><span>Finalidade</span>
+          </div>
+          <div class="api-row" *ngFor="let api of apiRoutes">
+            <span class="method" [class.get]="api.method === 'GET'">{{ api.method }}</span
+            ><code>{{ api.route }}</code
+            ><span class="purpose">{{ api.purpose }}</span>
+          </div>
+        </section>
+        <div class="api-note">
+          <strong>Fluxo do relatório</strong
+          ><span
+            >Os dados são carregados no navegador, apresentados na tela e convertidos em XLSX
+            localmente. Não há banco SQL envolvido.</span
+          >
+        </div>
+      </div></ng-template
+    >
+  </section>
+</main>
