@@ -36,7 +36,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/lista-telefonica-tj
+          path: dist/lista-telefonica-tj/browser
 
   deploy:
     needs: build
