@@ -69,8 +69,9 @@ git init
 git add .
 git commit -m "Publica lista telefônica Angular"
 git branch -M main
-git remote add origin https://github.com/SEU_USUARIO/lista-telefonica-tj.git
+git remote add origin https://github.com/gilsoaresone/lista-telefonica-tj.git
 git push -u origin main
 ```
 
 No GitHub, acesse **Settings > Pages** e selecione **GitHub Actions** como fonte. A URL será `https://SEU_USUARIO.github.io/lista-telefonica-tj/`.
+A página ficará em `https://gilsoaresone.github.io/lista-telefonica-tj/`.
