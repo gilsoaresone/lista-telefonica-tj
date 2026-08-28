@@ -150,7 +150,7 @@ export class App {
   protected loadCompleteList(): void {
     this.loading.set(true);
     this.error.set('');
-    this.http.get('/lista-telefonica-tjsp.csv', { responseType: 'text' }).subscribe({
+    this.http.get('lista-telefonica-tjsp.csv', { responseType: 'text' }).subscribe({
       next: (csv) => {
         const rows = this.parseCsv(csv);
         this.resultRows.set(rows);
